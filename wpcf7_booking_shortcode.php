@@ -52,21 +52,21 @@ function ticket_book_cf7_shortcode() {
 	global $wpdb;
 	$table_name = $wpdb->prefix . 'wpcf7_booking';
 	$result = $wpdb->get_results( "SELECT * FROM $table_name" );
-	$message = "<label class='wpcf7_booking'>";
+	$message = "<div class='wpcf7_booking'>";
 	$count = 0;
 	foreach ($result as $booking) {
 		$count ++;
-		$message .= "<input type='checkbox' name='check[]' id='check' value='$booking->id'";
+		$message .= "<label class='checkbox'><input type='checkbox' name='check[]' id='check-$booking->id' value='$booking->id'";
 		if($booking->booked == '1'){
 			$message .= " disabled ";
 		}
-		$message.= ">";
+		$message.= "></label>";
 		if($count == 10){
 			$message.="<br>";
 			$count = 0;
 		}
 	}
-	$message .= "</label>"; 
+	$message .= "</div>"; 
 	return $message;
 }
 add_shortcode('ticket_book_cf7', 'ticket_book_cf7_shortcode');
@@ -98,5 +98,12 @@ function wpcf7_booking_hook_javascript() {
 }
 
 add_action('admin_head', 'wpcf7_booking_hook_javascript');
+
+function wpcf7_booking_css() {
+    wp_register_style('wpcf7_booking_css', plugins_url('css/style.css',__FILE__ ));
+    wp_enqueue_style('wpcf7_booking_css');
+}
+
+add_action( 'init','wpcf7_booking_css');
 
 ?>
